@@ -1,0 +1,784 @@
+<!--
+  Front-End Session Landing Page
+  Title: Introduction to CSS: Basic Selectors, Properties, and Values
+  Tech: HTML + CSS + JavaScript (single file)
+-->
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Introduction to CSS — Landing Page</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+	<style>
+		/*
+			==============================
+			THEME + BASE
+			==============================
+		*/
+		:root{
+			--bg0:#0b1222;
+			--bg1:#0f172a;
+			--bg2:#111827;
+			--card:rgba(255,255,255,.06);
+			--card2:rgba(255,255,255,.08);
+			--stroke:rgba(148,163,184,.22);
+			--text:#e5e7eb;
+			--muted:#a6b0c0;
+			--shadow: 0 20px 60px rgba(0,0,0,.45);
+			--shadow2: 0 10px 30px rgba(0,0,0,.35);
+			--radius: 18px;
+			--accentA:#22d3ee; /* cyan */
+			--accentB:#6366f1; /* indigo */
+			--accentC:#a855f7; /* purple */
+			--good:#22c55e;
+			--bad:#ef4444;
+			--warn:#f59e0b;
+			--container: 1100px;
+		}
+
+		*{ box-sizing:border-box; }
+		html{ scroll-behavior:smooth; }
+		body{
+			margin:0;
+			font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+			color:var(--text);
+			background: radial-gradient(1200px 700px at 20% 10%, rgba(99,102,241,.25), transparent 60%),
+				radial-gradient(900px 600px at 85% 20%, rgba(34,211,238,.18), transparent 55%),
+				radial-gradient(900px 700px at 70% 95%, rgba(168,85,247,.18), transparent 60%),
+				linear-gradient(180deg, var(--bg1), var(--bg2) 60%, var(--bg0));
+			min-height:100vh;
+			overflow-x:hidden;
+		}
+		a{ color:inherit; text-decoration:none; }
+		p{ color:var(--muted); line-height:1.7; margin:0; }
+		h1,h2,h3{ margin:0; letter-spacing:-0.02em; }
+		code,kbd,pre{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+		/*
+			==============================
+			LAYOUT
+			==============================
+		*/
+		.container{ width:min(var(--container), calc(100% - 40px)); margin:0 auto; }
+		section{ padding: 86px 0; position:relative; }
+		.section-title{ font-size: clamp(24px, 3.2vw, 36px); }
+		.section-lead{ margin-top:10px; max-width: 72ch; }
+
+		/*
+			==============================
+			NAVBAR (sticky + active link highlight)
+			==============================
+		*/
+		.nav{
+			position: sticky;
+			top: 0;
+			z-index: 50;
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(17,24,39,.55));
+			border-bottom: 1px solid rgba(148,163,184,.18);
+		}
+		.nav .inner{ display:flex; align-items:center; justify-content:space-between; padding: 14px 0; gap: 14px; }
+		.brand{
+			display:flex; align-items:center; gap:10px;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+		}
+		.logo{
+			width: 34px; height: 34px; border-radius: 12px;
+			background: radial-gradient(circle at 30% 30%, rgba(34,211,238,.9), rgba(99,102,241,.65) 55%, rgba(168,85,247,.45) 100%);
+			box-shadow: 0 0 0 1px rgba(148,163,184,.18), 0 14px 40px rgba(99,102,241,.18);
+		}
+		.navlinks{ display:flex; align-items:center; gap: 8px; flex-wrap: wrap; justify-content:flex-end; }
+		.navlinks a{
+			font-size: 13px;
+			color: rgba(229,231,235,.86);
+			padding: 9px 10px;
+			border-radius: 12px;
+			border: 1px solid transparent;
+			transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease;
+		}
+		.navlinks a:hover{ transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(148,163,184,.22); }
+		.navlinks a.active{
+			background: linear-gradient(135deg, rgba(34,211,238,.16), rgba(99,102,241,.12), rgba(168,85,247,.14));
+			border-color: rgba(34,211,238,.25);
+			box-shadow: 0 10px 22px rgba(34,211,238,.07);
+		}
+
+		/*
+			==============================
+			HERO
+			==============================
+		*/
+		.hero{ padding-top: 64px; }
+		.hero-grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: center; }
+		.eyebrow{
+			display:inline-flex; align-items:center; gap:10px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(148,163,184,.22);
+			background: rgba(255,255,255,.05);
+			box-shadow: var(--shadow2);
+			color: rgba(229,231,235,.92);
+			font-size: 13px;
+		}
+		.pulse{
+			width:8px; height:8px; border-radius: 50%;
+			background: var(--accentA);
+			box-shadow: 0 0 0 0 rgba(34,211,238,.6);
+			animation: pulse 1.6s ease-out infinite;
+		}
+		@keyframes pulse{ 0%{ box-shadow: 0 0 0 0 rgba(34,211,238,.55);} 70%{ box-shadow: 0 0 0 14px rgba(34,211,238,0);} 100%{ box-shadow: 0 0 0 0 rgba(34,211,238,0);} }
+
+		.hero h1{ font-size: clamp(34px, 4.5vw, 58px); line-height: 1.02; margin-top: 14px; }
+		.grad{
+			background: linear-gradient(135deg, var(--accentA), var(--accentB) 55%, var(--accentC));
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			filter: drop-shadow(0 8px 24px rgba(99,102,241,.15));
+		}
+		.hero p{ margin-top: 14px; font-size: 16px; max-width: 64ch; }
+		.hero-actions{ display:flex; gap: 12px; margin-top: 22px; flex-wrap: wrap; align-items:center; }
+
+		.btn{
+			display:inline-flex; align-items:center; justify-content:center; gap:10px;
+			padding: 12px 16px;
+			border-radius: 14px;
+			border: 1px solid rgba(148,163,184,.22);
+			background: rgba(255,255,255,.06);
+			color: rgba(229,231,235,.95);
+			cursor:pointer;
+			transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+		}
+		.btn:hover{ transform: translateY(-2px); box-shadow: 0 18px 50px rgba(0,0,0,.35); border-color: rgba(34,211,238,.25); }
+		.btn:active{ transform: translateY(-1px) scale(.99); }
+		.btn.primary{
+			border-color: rgba(34,211,238,.28);
+			background: linear-gradient(135deg, rgba(34,211,238,.22), rgba(99,102,241,.16), rgba(168,85,247,.18));
+			box-shadow: 0 18px 60px rgba(99,102,241,.16);
+		}
+		.badge-row{ display:flex; gap:10px; flex-wrap: wrap; margin-top: 22px; }
+		.badge{
+			padding: 8px 10px;
+			border-radius: 999px;
+			border:1px solid rgba(148,163,184,.22);
+			background: rgba(17,24,39,.45);
+			color: rgba(229,231,235,.84);
+			font-size: 12px;
+		}
+
+		.hero-card{
+			position:relative;
+			border-radius: var(--radius);
+			border: 1px solid rgba(148,163,184,.22);
+			background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+			box-shadow: var(--shadow);
+			overflow:hidden;
+		}
+		.hero-card .top{
+			padding: 18px;
+			display:flex; align-items:center; justify-content:space-between; gap: 12px;
+			border-bottom: 1px solid rgba(148,163,184,.18);
+		}
+		.window-dots{ display:flex; gap: 8px; }
+		.dot{ width: 10px; height: 10px; border-radius:999px; opacity:.9; }
+		.dot.red{ background:#ef4444; }
+		.dot.yellow{ background:#f59e0b; }
+		.dot.green{ background:#22c55e; }
+
+		.hero-card .body{ padding: 18px; }
+		.mini-title{ font-weight: 700; letter-spacing:-0.01em; }
+		.mini{ margin-top: 12px; display:grid; gap: 10px; }
+		.mini .row{
+			display:flex; justify-content:space-between; align-items:center; gap: 10px;
+			padding: 10px 12px;
+			border: 1px solid rgba(148,163,184,.18);
+			border-radius: 14px;
+			background: rgba(15,23,42,.55);
+		}
+		.kbd{
+			font-size: 12px;
+			padding: 6px 8px;
+			border-radius: 10px;
+			border: 1px solid rgba(148,163,184,.24);
+			background: rgba(255,255,255,.04);
+			color: rgba(229,231,235,.86);
+		}
+		.glow{
+			position:absolute; inset:-40px;
+			background:
+				radial-gradient(600px 260px at 20% 20%, rgba(34,211,238,.18), transparent 65%),
+				radial-gradient(520px 260px at 85% 30%, rgba(99,102,241,.14), transparent 62%),
+				radial-gradient(520px 280px at 70% 85%, rgba(168,85,247,.13), transparent 60%);
+			filter: blur(10px);
+			animation: float 8s ease-in-out infinite;
+			pointer-events:none;
+		}
+		@keyframes float{ 0%,100%{ transform: translate3d(0,0,0);} 50%{ transform: translate3d(0,-18px,0);} }
+
+		/*
+			==============================
+			CARDS + GRID
+			==============================
+		*/
+		.grid{ display:grid; gap: 16px; margin-top: 22px; }
+		.grid.cols-3{ grid-template-columns: repeat(3, 1fr); }
+		.grid.cols-2{ grid-template-columns: repeat(2, 1fr); }
+		.card{
+			border-radius: var(--radius);
+			border: 1px solid rgba(148,163,184,.20);
+			background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+			box-shadow: var(--shadow2);
+			padding: 18px;
+			position:relative;
+			overflow:hidden;
+			transform: translateZ(0);
+			transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+		}
+		.card:hover{ transform: translateY(-3px); border-color: rgba(34,211,238,.26); box-shadow: 0 26px 70px rgba(0,0,0,.38); }
+		.card h3{ font-size: 16px; }
+		.card p{ margin-top: 8px; }
+		.chip{
+			display:inline-flex; align-items:center; gap:8px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			border: 1px solid rgba(148,163,184,.22);
+			background: rgba(17,24,39,.35);
+			font-size: 12px;
+			color: rgba(229,231,235,.84);
+		}
+		.best{
+			border-color: rgba(34,211,238,.28);
+			background: linear-gradient(135deg, rgba(34,211,238,.14), rgba(99,102,241,.10), rgba(168,85,247,.12));
+		}
+		.best::after{
+			content:"Best practice";
+			position:absolute;
+			top: 14px; right: 14px;
+			font-size: 12px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			border: 1px solid rgba(34,211,238,.28);
+			background: rgba(34,211,238,.10);
+			color: rgba(229,231,235,.92);
+		}
+
+		/*
+			==============================
+			CODE BLOCKS + HIGHLIGHTS
+			==============================
+		*/
+		.code{
+			margin-top: 18px;
+			border-radius: var(--radius);
+			border: 1px solid rgba(148,163,184,.20);
+			background: rgba(2,6,23,.55);
+			box-shadow: var(--shadow2);
+			overflow:hidden;
+		}
+		.code .bar{
+			display:flex; justify-content:space-between; align-items:center;
+			padding: 12px 14px;
+			border-bottom: 1px solid rgba(148,163,184,.16);
+			background: rgba(15,23,42,.50);
+		}
+		.copy{ font-size: 13px; }
+		.code pre{ margin:0; padding: 14px; overflow:auto; color: rgba(229,231,235,.92); }
+		.hl-sel{ color: #22d3ee; }
+		.hl-prop{ color: #a855f7; }
+		.hl-val{ color: #fbbf24; }
+
+		/*
+			==============================
+			QUIZ
+			==============================
+		*/
+		.quiz{
+			margin-top: 22px;
+			padding: 18px;
+			border-radius: var(--radius);
+			border: 1px solid rgba(148,163,184,.20);
+			background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+			box-shadow: var(--shadow2);
+		}
+		.quiz .q{
+			font-weight: 700;
+			letter-spacing:-0.01em;
+		}
+		.options{ display:grid; gap: 10px; margin-top: 12px; }
+		.option{
+			text-align:left;
+			padding: 12px 12px;
+			border-radius: 14px;
+			border: 1px solid rgba(148,163,184,.20);
+			background: rgba(15,23,42,.55);
+			color: rgba(229,231,235,.92);
+			cursor:pointer;
+			transition: transform .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+		}
+		.option:hover{ transform: translateY(-2px); border-color: rgba(34,211,238,.24); box-shadow: 0 16px 40px rgba(0,0,0,.32); }
+		.option[disabled]{ cursor:not-allowed; opacity: .75; }
+		.option.correct{
+			border-color: rgba(34,197,94,.55);
+			background: rgba(34,197,94,.12);
+		}
+		.option.wrong{
+			border-color: rgba(239,68,68,.55);
+			background: rgba(239,68,68,.12);
+		}
+		.explain{
+			margin-top: 12px;
+			padding: 12px 12px;
+			border-radius: 14px;
+			border: 1px solid rgba(148,163,184,.18);
+			background: rgba(2,6,23,.40);
+			color: rgba(229,231,235,.88);
+			display:none;
+		}
+		.explain.show{ display:block; }
+		.explain.good{ border-color: rgba(34,197,94,.45); }
+		.explain.bad{ border-color: rgba(239,68,68,.45); }
+
+		/*
+			==============================
+			SCROLL ANIMATIONS (IntersectionObserver)
+			==============================
+		*/
+		.reveal{ opacity:0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+		.reveal.in{ opacity:1; transform: translateY(0); }
+
+		/*
+			==============================
+			FOOTER
+			==============================
+		*/
+		footer{ padding: 36px 0 56px; border-top: 1px solid rgba(148,163,184,.16); background: rgba(2,6,23,.35); }
+		.footer-grid{ display:flex; justify-content:space-between; align-items:center; gap: 14px; flex-wrap:wrap; }
+		.small{ font-size: 13px; color: rgba(229,231,235,.72); }
+
+		/*
+			==============================
+			RESPONSIVE
+			==============================
+		*/
+		@media (max-width: 900px){
+			.hero-grid{ grid-template-columns: 1fr; }
+			.grid.cols-3{ grid-template-columns: 1fr; }
+			.grid.cols-2{ grid-template-columns: 1fr; }
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Sticky Navbar -->
+	<nav class="nav" aria-label="Primary">
+		<div class="container inner">
+			<a class="brand" href="#top" aria-label="Go to top">
+				<span class="logo" aria-hidden="true"></span>
+				<span>CSS Session</span>
+			</a>
+			<div class="navlinks" role="navigation" aria-label="Section navigation">
+				<a href="#what" data-link>What is CSS</a>
+				<a href="#syntax" data-link>Syntax</a>
+				<a href="#types" data-link>Types</a>
+				<a href="#selectors" data-link>Selectors</a>
+				<a href="#props" data-link>Properties</a>
+			</div>
+		</div>
+	</nav>
+
+	<main id="top">
+		<!-- Hero Section -->
+		<section class="hero">
+			<div class="container hero-grid">
+				<div class="reveal">
+					<span class="eyebrow"><span class="pulse" aria-hidden="true"></span>Front-End Session • Beginner friendly</span>
+					<h1>
+						<span class="grad">Introduction to CSS</span><br>
+						Basic Selectors, Properties, and Values
+					</h1>
+					<p>
+						Learn how to style your HTML with confidence.
+						We will cover the core building blocks of CSS, then practice with mini challenges and quick quizzes.
+					</p>
+					<div class="hero-actions">
+						<a class="btn primary" href="#what">Start Learning</a>
+						<button class="btn" type="button" id="scrollNext">Jump to next section</button>
+					</div>
+					<div class="badge-row" aria-label="Highlights">
+						<span class="badge">Dark UI + glass cards</span>
+						<span class="badge">Smooth scrolling</span>
+						<span class="badge">Scroll animations</span>
+						<span class="badge">Interactive quizzes</span>
+					</div>
+				</div>
+
+				<!-- Decorative / mini dashboard -->
+				<aside class="hero-card reveal" aria-label="Session quick panel">
+					<div class="glow" aria-hidden="true"></div>
+					<div class="top">
+						<div class="window-dots" aria-hidden="true">
+							<span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+						</div>
+						<span class="chip">Estimated: 60–90 min</span>
+					</div>
+					<div class="body">
+						<div class="mini-title">Today you will learn</div>
+						<div class="mini">
+							<div class="row"><span>Selectors</span><span class="kbd">h1 .btn #app</span></div>
+							<div class="row"><span>Properties</span><span class="kbd">color margin</span></div>
+							<div class="row"><span>Values</span><span class="kbd">16px #22d3ee</span></div>
+							<div class="row"><span>Best method</span><span class="kbd">External CSS</span></div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</section>
+
+		<!-- What is CSS -->
+		<section id="what" aria-labelledby="whatTitle">
+			<div class="container">
+				<div class="reveal">
+					<h2 class="section-title" id="whatTitle">What is CSS?</h2>
+					<p class="section-lead">
+						CSS (Cascading Style Sheets) controls how your HTML looks.
+						If HTML is the <strong>structure</strong> of a house, CSS is the <strong>paint, lighting, and layout</strong>.
+					</p>
+				</div>
+
+				<div class="grid cols-3">
+					<div class="card reveal">
+						<span class="chip">Purpose</span>
+						<h3>Make pages beautiful</h3>
+						<p>Change colors, fonts, spacing, and alignment to create a clean UI.</p>
+					</div>
+					<div class="card reveal">
+						<span class="chip">Layout</span>
+						<h3>Arrange content</h3>
+						<p>Use modern layout tools like Flexbox and Grid to build responsive pages.</p>
+					</div>
+					<div class="card reveal">
+						<span class="chip">Experience</span>
+						<h3>Add delight</h3>
+						<p>Hover effects, transitions, and subtle animations improve usability.</p>
+					</div>
+				</div>
+
+				<!-- Quiz 1 -->
+				<div class="quiz reveal" data-quiz>
+					<div class="q">Quiz: What does CSS mainly control?</div>
+					<div class="options">
+						<button class="option" data-answer="wrong">The meaning of the text (content)</button>
+						<button class="option" data-answer="correct">The visual presentation (style)</button>
+						<button class="option" data-answer="wrong">The database behind the website</button>
+					</div>
+					<div class="explain" data-explain>
+						<strong>Explanation:</strong> HTML provides structure and content, while CSS controls styling like colors, spacing, and layout.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- CSS Syntax -->
+		<section id="syntax" aria-labelledby="syntaxTitle">
+			<div class="container">
+				<div class="reveal">
+					<h2 class="section-title" id="syntaxTitle">CSS Syntax</h2>
+					<p class="section-lead">A CSS rule targets something (a selector) and applies styles (properties) with specific values.</p>
+				</div>
+
+				<div class="code reveal" aria-label="CSS syntax example">
+					<div class="bar">
+						<span class="chip">Example rule</span>
+						<button class="btn copy" type="button" data-copy="#syntaxCode">Copy</button>
+					</div>
+					<pre id="syntaxCode"><code><span class="hl-sel">h1</span> {
+	<span class="hl-prop">color</span>: <span class="hl-val">#22d3ee</span>;
+	<span class="hl-prop">font-size</span>: <span class="hl-val">40px</span>;
+}</code></pre>
+				</div>
+
+				<div class="grid cols-3">
+					<div class="card reveal">
+						<h3><span class="hl-sel">Selector</span></h3>
+						<p>Who are we styling? Example: <code>h1</code>, <code>.card</code>, <code>#app</code></p>
+					</div>
+					<div class="card reveal">
+						<h3><span class="hl-prop">Property</span></h3>
+						<p>What are we changing? Example: <code>color</code>, <code>margin</code>, <code>display</code></p>
+					</div>
+					<div class="card reveal">
+						<h3><span class="hl-val">Value</span></h3>
+						<p>What do we set it to? Example: <code>16px</code>, <code>center</code>, <code>#111827</code></p>
+					</div>
+				</div>
+
+				<!-- Quiz 2 -->
+				<div class="quiz reveal" data-quiz>
+					<div class="q">Quiz: In <code>.btn { color: red; }</code>, what is <code>color</code>?</div>
+					<div class="options">
+						<button class="option" data-answer="wrong">A selector</button>
+						<button class="option" data-answer="correct">A property</button>
+						<button class="option" data-answer="wrong">A value</button>
+					</div>
+					<div class="explain" data-explain>
+						<strong>Explanation:</strong> <code>.btn</code> is the selector, <code>color</code> is the property, and <code>red</code> is the value.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Types of CSS -->
+		<section id="types" aria-labelledby="typesTitle">
+			<div class="container">
+				<div class="reveal">
+					<h2 class="section-title" id="typesTitle">Types of CSS</h2>
+					<p class="section-lead">There are three common ways to add CSS. All work, but they are used for different scenarios.</p>
+				</div>
+
+				<div class="grid cols-3">
+					<div class="card reveal">
+						<span class="chip">Inline</span>
+						<h3>Inside an element</h3>
+						<p>Quick for tiny edits. Hard to maintain for real projects.</p>
+						<p><code>&lt;h1 style="color:cyan"&gt;...&lt;/h1&gt;</code></p>
+					</div>
+					<div class="card reveal">
+						<span class="chip">Internal</span>
+						<h3>Inside the HTML file</h3>
+						<p>Useful for small pages and demos. Still can grow messy.</p>
+						<p><code>&lt;style&gt; h1{...} &lt;/style&gt;</code></p>
+					</div>
+					<div class="card reveal best">
+						<span class="chip">External</span>
+						<h3>Separate .css file</h3>
+						<p>Best for maintainability. Reusable across multiple pages.</p>
+						<p><code>&lt;link rel="stylesheet" href="styles.css"&gt;</code></p>
+					</div>
+				</div>
+
+				<!-- Quiz 3 -->
+				<div class="quiz reveal" data-quiz>
+					<div class="q">Quiz: Which type of CSS is generally best for real projects?</div>
+					<div class="options">
+						<button class="option" data-answer="wrong">Inline CSS</button>
+						<button class="option" data-answer="wrong">Internal CSS</button>
+						<button class="option" data-answer="correct">External CSS</button>
+					</div>
+					<div class="explain" data-explain>
+						<strong>Explanation:</strong> External CSS keeps styles organized and reusable, which is easier to maintain as projects grow.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Selectors -->
+		<section id="selectors" aria-labelledby="selectorsTitle">
+			<div class="container">
+				<div class="reveal">
+					<h2 class="section-title" id="selectorsTitle">Selectors</h2>
+					<p class="section-lead">Selectors decide <em>which</em> HTML elements receive your styles.</p>
+				</div>
+
+				<div class="grid cols-3">
+					<div class="card reveal">
+						<span class="chip">Element</span>
+						<h3><code>p</code> or <code>button</code></h3>
+						<p>Targets all elements of that type.</p>
+						<p><code>p { color: #a6b0c0; }</code></p>
+					</div>
+					<div class="card reveal">
+						<span class="chip">Class</span>
+						<h3><code>.card</code></h3>
+						<p>Reusable style. Many elements can share one class.</p>
+						<p><code>.card { padding: 16px; }</code></p>
+					</div>
+					<div class="card reveal">
+						<span class="chip">ID</span>
+						<h3><code>#header</code></h3>
+						<p>Unique element. Use sparingly.</p>
+						<p><code>#header { position: sticky; }</code></p>
+					</div>
+				</div>
+
+				<!-- Quiz 4 -->
+				<div class="quiz reveal" data-quiz>
+					<div class="q">Quiz: Which selector targets an element with <code>id="app"</code>?</div>
+					<div class="options">
+						<button class="option" data-answer="wrong"><code>.app</code></button>
+						<button class="option" data-answer="correct"><code>#app</code></button>
+						<button class="option" data-answer="wrong"><code>app</code></button>
+					</div>
+					<div class="explain" data-explain>
+						<strong>Explanation:</strong> IDs use <code>#</code>, classes use <code>.</code>, and elements are written by tag name.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Properties & Values -->
+		<section id="props" aria-labelledby="propsTitle">
+			<div class="container">
+				<div class="reveal">
+					<h2 class="section-title" id="propsTitle">Properties & Values</h2>
+					<p class="section-lead">Think of a property as a setting and the value as what you set it to.</p>
+				</div>
+
+				<div class="grid cols-2">
+					<div class="card reveal">
+						<h3>Color</h3>
+						<p><code>color: #22d3ee;</code> changes text color.</p>
+						<p><code>background: #111827;</code> changes background.</p>
+					</div>
+					<div class="card reveal">
+						<h3>Spacing</h3>
+						<p><code>margin</code> adds space <em>outside</em> an element.</p>
+						<p><code>padding</code> adds space <em>inside</em> an element.</p>
+					</div>
+				</div>
+
+				<div class="code reveal" aria-label="Properties and values example">
+					<div class="bar">
+						<span class="chip">Example</span>
+						<button class="btn copy" type="button" data-copy="#propsCode">Copy</button>
+					</div>
+					<pre id="propsCode"><code>.card {
+	margin: 16px;      /* outside */
+	padding: 16px;     /* inside */
+	color: #e5e7eb;
+	background: rgba(255,255,255,.06);
+}</code></pre>
+				</div>
+
+				<!-- Quiz 5 -->
+				<div class="quiz reveal" data-quiz>
+					<div class="q">Quiz: Which property adds space <em>inside</em> a box?</div>
+					<div class="options">
+						<button class="option" data-answer="wrong">margin</button>
+						<button class="option" data-answer="correct">padding</button>
+						<button class="option" data-answer="wrong">color</button>
+					</div>
+					<div class="explain" data-explain>
+						<strong>Explanation:</strong> Padding is the inner spacing between the content and the border.
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Practice -->
+		
+	</main>
+
+	<footer>
+		<div class="container footer-grid">
+			<div class="small">Built for beginners • Clean HTML + CSS + JS • No heavy libraries</div>
+			<a class="btn" href="#top">Back to top</a>
+		</div>
+	</footer>
+
+	<script>
+		/*
+			==============================
+			SMOOTH SCROLL (extra safety)
+			==============================
+		*/
+		document.getElementById('scrollNext').addEventListener('click', () => {
+			document.querySelector('#what').scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+
+		/*
+			==============================
+			SCROLL REVEAL (fade-in / slide-up)
+			==============================
+		*/
+		const revealEls = document.querySelectorAll('.reveal');
+		const io = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) entry.target.classList.add('in');
+			});
+		}, { threshold: 0.12 });
+		revealEls.forEach(el => io.observe(el));
+
+		/*
+			==============================
+			ACTIVE NAV LINK (highlight current section)
+			==============================
+		*/
+		const sectionIds = ['what','syntax','types','selectors','props'];
+		const sections = sectionIds.map(id => document.getElementById(id));
+		const navLinks = [...document.querySelectorAll('[data-link]')];
+
+		function setActiveLink(id){
+			navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+		}
+
+		const sectionObserver = new IntersectionObserver((entries) => {
+			// Pick the most visible section
+			const visible = entries
+				.filter(e => e.isIntersecting)
+				.sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+			if (visible?.target?.id) setActiveLink(visible.target.id);
+		}, { threshold: [0.2, 0.35, 0.5, 0.65] });
+
+		sections.forEach(sec => sec && sectionObserver.observe(sec));
+		setActiveLink('what');
+
+		/*
+			==============================
+			QUIZ LOGIC
+			- Clicking an answer adds class "correct" or "wrong"
+			- Disables other options after selection
+			- Shows explanation below
+			==============================
+		*/
+		document.querySelectorAll('[data-quiz]').forEach((quiz) => {
+			const options = [...quiz.querySelectorAll('.option')];
+			const explain = quiz.querySelector('[data-explain]');
+
+			options.forEach((btn) => {
+				btn.addEventListener('click', () => {
+					// Prevent re-answering
+					if (options.some(o => o.classList.contains('correct') || o.classList.contains('wrong'))) return;
+
+					const isCorrect = btn.dataset.answer === 'correct';
+					btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+					// Disable all options
+					options.forEach(o => { o.disabled = true; });
+
+					// Show explanation + feedback state
+					explain.classList.add('show', isCorrect ? 'good' : 'bad');
+					explain.innerHTML = (isCorrect ? '✅ <strong>Correct.</strong> ' : '❌ <strong>Not quite.</strong> ') + explain.innerHTML;
+				});
+			});
+		});
+
+		/*
+			==============================
+			COPY BUTTONS
+			==============================
+		*/
+		document.querySelectorAll('[data-copy]').forEach((btn) => {
+			btn.addEventListener('click', async () => {
+				const target = document.querySelector(btn.dataset.copy);
+				if (!target) return;
+
+				const text = target.innerText.replace(/\n\s*$/,'');
+				try{
+					await navigator.clipboard.writeText(text);
+					btn.textContent = 'Copied';
+					setTimeout(() => btn.textContent = 'Copy', 900);
+				}catch{
+					btn.textContent = 'Copy failed';
+					setTimeout(() => btn.textContent = 'Copy', 1100);
+				}
+			});
+		});
+	</script>
+</body>
+</html>
